@@ -1,0 +1,16 @@
+{
+    "description": "(Meta-)Schema for the Schema files in `/forms`.",
+    "type": [ "object" ],
+    "required": [ "schema" ],
+    "additionalProperties": false,
+    "properties": {
+        "schema": {
+            "description": "Schema passed to `react-jsonschema-form` as `schema`. In theory any JSON Schema, in practice, there are [some restrictions](https://react-jsonschema-form.readthedocs.io/en/latest/#json-schema-supporting-status).",
+            "$ref": "https://json-schema.org/draft/2019-09/schema"
+        },
+        "uiSchema": {
+            "description": "UI Schema passed to `react-jsonschema-form` as `uiSchema`. See <https://react-jsonschema-form.readthedocs.io/en/latest/form-customization/#the-uischema-object>.",
+            "$ref": "https://json-schema.org/draft/2019-09/schema"
+        }
+    }
+}

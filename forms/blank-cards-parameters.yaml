@@ -1,0 +1,16 @@
+schema:
+  title: Blank Cards Storage -- Parameters
+  type: object
+  required: [ color ]
+  properties:
+    color: # not part of the current proposal, but would be nice
+      title: Card color
+      description: |
+        The base color of the **NFC** card.
+        Pick anyone of *NXP*'s great logo colors!
+      enum:      [     orange,      blue,      green  ]
+      enumNames: [ 'N: orange', 'X: blue', 'P: green' ]
+#uiSchema:
+#  color:
+#    ui:widget: radio
+#    ui:options: { inline: true }

@@ -1,0 +1,47 @@
+schema:
+  title: NFC writer -- Parameters
+  description: The vCard info that will be written to the NFC card
+  type: object
+  required: [ name, ]
+  properties:
+    name:
+      title: Name
+      type: string
+      maxLength: 50
+    address:
+      title: Address
+      type: string
+      maxLength: 150
+    homepage:
+      title: Homepage
+      type: string
+      format: uri
+      maxLength: 100
+    email:
+      title: Email
+      type: string
+      format: email
+      maxLength: 100
+    phone:
+      title: Phone
+      type: string
+      pattern: '^[+][0-9][0-9-]+[0-9]$'
+      maxLength: 20
+    photo:
+      title: Photo
+      type: string
+      format: data-url
+    # ...
+uiSchema:
+  name:
+    ui:placeholder: Your name in whatever format
+  address:
+    ui:widget: textarea
+    ui:placeholder: Any string
+  homepage:
+    ui:placeholder: RFC 3986 compliant URI
+  email:
+    ui:placeholder: RFC 5322 compliant email address
+  phone:
+    ui:placeholder: Phone number in international format, with leading `+` (must match JS RegExp /^[+][0-9][0-9-]+[0-9]$/)
+

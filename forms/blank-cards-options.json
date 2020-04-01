@@ -1,0 +1,22 @@
+{
+  "schema": {
+    "title": "Blank Cards Storage -- Options",
+    "type": "object",
+    "required": [ "speed" ],
+    "properties": {
+      "speed": {
+        "title": "Robot speed",
+        "description": "Speed robot will be moving with, in % relative to the maximum.",
+        "type": "number",
+        "minimum": 10,
+        "maximum": 100,
+        "default": 15
+      }
+    }
+  },
+  "uiSchema": {
+    "speed": {
+      "ui:widget": "range"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+#main {
+	padding: 10px;
+}
+
+#selectHost label[for=root_name] { display: none; }
+
+#output::before {
+	content: 'output';
+	font-size: 140%;
+	position: relative;
+	left: -10px;
+	top: -10px;
+}
+#output {
+	color: white;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+	padding: 20px 20px 20px 100px;
+	font-family: monospace;
+	font-size: 150%;
+	text-indent: -80px;
+}

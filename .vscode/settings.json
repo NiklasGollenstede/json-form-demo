@@ -1,0 +1,14 @@
+{ // local settings expansion for VSCode
+    // apply the Schema `/forms.schema.json` to the files in `/forms`:
+    "json.schemas": [
+        { "url": "./forms.schema.json", "fileMatch": [ "/forms/*.json", ], }
+    ],
+    "yaml.schemas": {
+        "./forms.schema.json": [ "/forms/*.yaml", "/test.schema.yaml", ],
+    },
+    "cSpell.words": [
+        "bootswatch",
+        "divs",
+        "unmount"
+    ],
+}
