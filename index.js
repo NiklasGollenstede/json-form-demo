@@ -12,28 +12,51 @@
  */
 
 const store = new KvStore({ name: 'formData', }); // Holds the form data of each form, keyed by the Schema file name.
+const main = document.getElementById('main');
 
-const selectHost = document.getElementById('main').appendChild(Object.assign(document.createElement('section'), { id: 'selectHost', }));
-const formHost   = document.getElementById('main').appendChild(Object.assign(document.createElement('section'), { id: 'formHost', }));
-const output     = document.getElementById('main').appendChild(Object.assign(document.createElement('section'), { id: 'output', }));
-
-// render a form with a single `<select>` over the `formsList`, and `onChange` `showForm` of that Schema file
-selectHost.client = ReactDOM.render(e(Form, {
-	className: 'was-validated', // UI `:(in)?valid` state is only rendered once this is set, so just set it from the start
-	schema: { // a top level string/enum in the Schema should work, but wasn't form-validated correctly
-		title: 'Select form', type: 'object', required: [ 'name', ],
-		properties: { name: { type: 'string', enum: formsList, /* default: formsList.slice(-2)[0], */ }, },
+const themesList = [ 'cyborg', 'cerulean', 'lumen', 'paper', 'sandstone', 'slate', 'superhero', 'yeti', 'cosmo', 'darkly', 'flatly', 'journal', 'readable', 'simplex', 'spacelab', 'united', '<none>', ];
+const themeSelect = renderSelect({
+	title: 'Select Theme', items: themesList,
+	host: main.appendChild(Object.assign(document.createElement('section'), { id: 'themeSelectHost', })),
+	onChange(name) {
+		if (!themesList.includes(name)) { return; }
+		document.head.querySelector('#theme-link').href = `node_modules/bootswatch/${name}/bootstrap.css`;
+		store.set(':select-theme', name); // save the selected theme, with a name that can't collide with a file name
 	},
-	onChange({ formData: { name, } = { }, }) {
+});
+store.get(':select-theme').then(name => {
+	themeSelect.setState({ formData: {value: name, }, });
+	document.head.querySelector('#theme-link').href = `node_modules/bootswatch/${name}/bootstrap.css`;
+});
+
+const formSelect = renderSelect({
+	title: 'Select Form', items: formsList,
+	host: main.appendChild(Object.assign(document.createElement('section'), { id: 'formSelectHost', })),
+	onChange(name) {
 		if (!formsList.includes(name)) { return; }
 		showForm(name).catch(console.error);
-		store.set(':select', { name, }); // save the selected form, with a name that can't collide with a file name
+		store.set(':select-form', name); // save the selected form, with a name that can't collide with a file name
 	},
-}, [ /* empty to suppress the 'Submit' button */ ]), selectHost);
+});
+
+const formHost   = main.appendChild(Object.assign(document.createElement('section'), { id: 'formHost', }));
+const output     = main.appendChild(Object.assign(document.createElement('section'), { id: 'output', }));
 
 // select the form saved from last time (setting this in the ctor didn't work)
-selectHost.client.setState({ formData: (await store.get(':select').catch(() => null)), });
-(await showForm(selectHost.client.state.formData.name));
+formSelect.setState({ formData: { value: (await store.get(':select-form').catch(() => null)), }, });
+(await showForm(formSelect.state.formData.value));
+
+
+/// Renders a form with a single `<select>` over the `items` in the `host` element.
+function renderSelect({ title, items, host, onChange, }) {
+	return (host.client = ReactDOM.render(e(Form, {
+		className: 'was-validated', // UI `:(in)?valid` state is only rendered once this is set, so just set it from the start
+		schema: { // a top level string/enum in the Schema should work, but wasn't form-validated correctly
+			title, type: 'object', required: [ 'value', ],
+			properties: { value: { type: 'string', enum: items, }, },
+		}, onChange({ formData: { value, } = { }, }) { return onChange.call(this, value); },
+	}, [ /* empty to suppress the 'Submit' button */ ]), host));
+}
 
 /**
  * Renders a form from its Schema file and with the stored `formData` (if any).
@@ -55,8 +78,8 @@ async function showForm(name) {
 	}, [
 		e('button', { type: 'submit', key: 'submit', className: 'btn btn-info', }, [ 'Submit', ]), // the default submit button
 		e('input', { type: 'reset', key: 'reset', className: 'btn', value: 'Reset', onClick() { // button to clear the form
-			formHost.client.setState({ formData: null, });
-			showOutput(null); store.delete(formHost.dataset.formName); // also clear the output and stored value
+			store.delete(formHost.dataset.formName); // clear the stored value
+			showForm(name); // re-render the form (setting the value to undefined/null does not work)
 		}, }),
 	]), formHost);
 	showOutput(formHost.client.state.formData); // the ctor doesn't (always?)  trigger `onSubmit`, so set the initial output manually

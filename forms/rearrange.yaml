@@ -1,0 +1,31 @@
+
+schema:
+  title: Module Order
+  type: array
+  default:
+    - { id: 0123456789abcdef, title: Module 4 }
+    - { id: 0123456789abcdef, title: Module 1 }
+    - { id: 0123456789abcdef, title: Module 3 }
+    - { id: 0123456789abcdef, title: Module 2 }
+  items:
+    type: object
+    required: [ id, title ]
+    properties:
+      id:
+        title: UUID
+        type: string
+        pattern: '^[0-9a-f]{16}$'
+      title:
+        title: Title
+        type: string
+uiSchema:
+  ui:options:
+    orderable: true
+    addable: false
+    removable: false
+  items:
+    ui:order: [ title, id ]
+    id:
+      ui:readonly: true
+    title:
+      ui:readonly: true
